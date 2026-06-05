@@ -15,8 +15,15 @@ export default function ServiceMarketplace() {
   const [category, setCategory] = useState('');
   const [form, setForm] = useState({ businessName: '', category: 'Electrician', phone: '', address: '' });
 
-  const load = () => api.get('/providers', { params: category ? { category } : {} }).then(({ data }) => setProviders(data.providers));
-  useEffect(load, [category]);
+  // const load = () => api.get('/providers', { params: category ? { category } : {} }).then(({ data }) => setProviders(data.providers));
+  // useEffect(load, [category]);
+
+  const load = () =>
+  api.get('/providers', { params: category ? { category } : {} })
+     .then(({ data }) => {
+        console.log("Providers API:", data);
+        setProviders(data.providers || []);
+     });
 
   const register = async (event) => {
     event.preventDefault();
