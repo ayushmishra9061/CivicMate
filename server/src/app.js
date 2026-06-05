@@ -27,12 +27,7 @@ export const createApp = () => {
     res.json({ ok: true, service: 'civicmate-api' });
   });
 
-  app.use(
-  cors({
-    origin: env.clientUrl.split(",").map((origin) => origin.trim()),
-    credentials: true,
-    })
-  );
+  app.use(cors());
   
   app.use('/api/auth', authRoutes);
   app.use('/api/complaints', complaintRoutes);
