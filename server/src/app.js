@@ -1,6 +1,7 @@
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import morgan from 'morgan';
+import cors from "cors";
 import { env } from './config/env.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { securityMiddleware } from './middleware/security.js';
@@ -26,6 +27,13 @@ export const createApp = () => {
     res.json({ ok: true, service: 'civicmate-api' });
   });
 
+  app.use(
+  cors({
+    origin: env.clientUrl.split(",").map((origin) => origin.trim()),
+    credentials: true,
+    })
+  );
+  
   app.use('/api/auth', authRoutes);
   app.use('/api/complaints', complaintRoutes);
   app.use('/api/ai', aiRoutes);
