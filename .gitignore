@@ -4,6 +4,7 @@ coverage
 .env
 .env.local
 .env.example
+env.js
 .DS_Store
 __pycache__
 *.pyc
