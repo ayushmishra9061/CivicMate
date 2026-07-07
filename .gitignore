@@ -2,6 +2,7 @@ node_modules
 dist
 coverage
 .env
+.env.example
 .en
 .env.local
 .DS_Store
