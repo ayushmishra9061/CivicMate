@@ -10,7 +10,7 @@ export const useNotifications = () => {
   useEffect(() => {
     if (!user) return undefined;
     api.get('/notifications').then(({ data }) => setNotifications(data.notifications));
-
+    console.log(import.meta.env.VITE_SOCKET_URL);
     const socket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000', {
       transports: ['websocket']
     });
