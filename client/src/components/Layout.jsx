@@ -85,9 +85,23 @@ export default function Layout() {
                 ) : null}
 
                 {showNotifications && (
-                  <div className="absolute right-0 top-12 w-80 rounded-lg border border-gray-200 bg-white text-gray-900 shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:text-white">
-                    <div className="font-semibold text-gray-900 dark:text-white">
-                      Notifications
+                  <div className="absolute right-0 top-12 w-[360px] rounded-xl border border-gray-200 bg-white text-gray-900 shadow-xl dark:border-gray-700 dark:bg-gray-800 dark:text-white">
+                    <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 rounded-xl">
+                      <div className="flex items-center gap-2">
+                        <Bell className="h-5 w-5 text-civic-blue" />
+
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          Notifications
+                        </h3>
+                        <p className="text-s text-gray-500 dark:text-gray-400">
+                          ({unread})
+                        </p>
+                      </div>
+                      {unread > 0 && (
+                        <button className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400">
+                          Mark all
+                        </button>
+                      )}
                     </div>
 
                     {notifications.length === 0 ? (
@@ -95,18 +109,41 @@ export default function Layout() {
                         No notifications
                       </div>
                     ) : (
-                      notifications.map((notification) => (
-                        <div
-                          key={notification._id}
-                          className="border-b border-gray-200 p-3 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-700"
-                        >
-                          <p className="text-gray-800 dark:text-gray-100">{notification.message}</p>
+                      <div className="space-y-3 p-3">
+                        {notifications.map((notification) => (
+                          <div
+                            key={notification._id}
+                            className="rounded-xl border border-gray-200 bg-white p-4 transition-all duration-200 hover:bg-gray-50 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
+                          >
+                            <div className="flex items-start justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="text-lg">🚧</span>
 
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            {new Date(notification.createdAt).toLocaleString()}
-                          </p>
-                        </div>
-                      ))
+                                <h4 className="font-semibold text-gray-900 dark:text-white">
+                                  Complaint Update
+                                </h4>
+                              </div>
+
+                              {!notification.read && (
+                                <span className="h-2.5 w-2.5 rounded-full bg-red-500 "></span>
+                              )}
+                            </div>
+
+                            <p className="mt-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                              {notification.message}
+                            </p>
+
+                            <div className="mt-3 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                              <span>🕒</span>
+                              <span>
+                                {new Date(
+                                  notification.createdAt,
+                                ).toLocaleString()}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 )}

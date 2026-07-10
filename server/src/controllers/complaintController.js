@@ -4,12 +4,17 @@ import { detectIssueFromImage, inferPriority } from '../services/aiService.js';
 import { createNotification, notifyAdmins } from '../services/notificationService.js';
 import { uploadBufferToStorage } from '../services/storageService.js';
 
+
+
 const canAccessComplaint = (user, complaint) =>
   user.role === 'admin' || complaint.userId.toString() === user._id.toString();
 
 export const createComplaint = asyncHandler(async (req, res) => {
+  console.log("🚀 createComplaint called");
   let imageUrl;
   let aiDetection;
+
+
 
   if (req.file) {
     const upload = await uploadBufferToStorage(req.file, `${req.protocol}://${req.get('host')}`);
@@ -30,11 +35,27 @@ export const createComplaint = asyncHandler(async (req, res) => {
     aiDetection
   });
 
+  console.log("====== CREATE NOTIFICATION ======");
+  console.log({
+    userId: req.user._id,
+    type: "complaint",
+    title: "Complaint Submitted",
+    actionUrl: `/complaints/${complaint._id}`,
+  });
+
   await createNotification({
     userId: req.user._id,
-    title: 'Complaint submitted',
-    message: `Complaint ${complaint.complaintId} has been submitted.`,
-    meta: { complaintId: complaint._id }
+    type: "complaint",
+    title: "Complaint Submitted",
+    message: `Complaint ${complaint.complaintId} has been submitted successfully.`,
+    actionUrl: `/complaints/${complaint._id}`,
+    meta: {
+      complaintId: complaint._id,
+      complaintNumber: complaint.complaintId,
+      issueType: complaint.issueType,
+      priority: complaint.priority,
+      status: complaint.status
+    }
   });
   notifyAdmins('complaint:new', complaint);
 
@@ -81,11 +102,44 @@ export const updateComplaint = asyncHandler(async (req, res) => {
   });
 
   await complaint.save();
+
+  let notificationType = "complaint";
+  let notificationTitle = "Complaint Updated";
+
+  switch (complaint.status) {
+    case "Resolved":
+      notificationType = "resolved";
+      notificationTitle = "Complaint Resolved";
+      break;
+
+    case "In Progress":
+      notificationType = "provider";
+      notificationTitle = "Work Started";
+      break;
+
+    case "Rejected":
+      notificationType = "system";
+      notificationTitle = "Complaint Rejected";
+      break;
+
+    default:
+      notificationType = "complaint";
+      notificationTitle = "Complaint Updated";
+  }
+
   await createNotification({
     userId: complaint.userId,
-    title: 'Complaint updated',
+    type: notificationType,
+    title: notificationTitle,
     message: `${complaint.complaintId} is now ${complaint.status}.`,
-    meta: { complaintId: complaint._id, status: complaint.status }
+    actionUrl: `/complaints/${complaint._id}`,
+    meta: {
+      complaintId: complaint._id,
+      complaintNumber: complaint.complaintId,
+      issueType: complaint.issueType,
+      priority: complaint.priority,
+      status: complaint.status,
+    },
   });
 
   res.json({ success: true, complaint });
