@@ -4,26 +4,42 @@ import { askCivicMate, detectIssueFromImage } from "../services/aiService.js";
 import { uploadBufferToStorage } from "../services/storageService.js";
 
 export const detectIssue = asyncHandler(async (req, res) => {
-  // let imageUrl = req.body.imageUrl;
-  // if (req.file) {
-  //   const upload = await uploadBufferToStorage(
-  //     req.file,
-  //     `${req.protocol}://${req.get("host")}`,
-  //   );
-  //   console.log("Base URL:", `${req.protocol}://${req.get("host")}`);
-  //   console.log("Generated image URL:", upload.secure_url);
-  //   imageUrl = upload.secure_url;
-  // }
-  // const detection = await detectIssueFromImage(imageUrl);
+  console.log("===== STEP 1 : Request received =====");
+
   if (!req.file) {
+    console.log("❌ No file received");
+
     return res.status(400).json({
       success: false,
       message: "Image is required",
     });
   }
-  
+
+  console.log("✅ STEP 2 : File received");
+  console.log(req.file.originalname);
+
+  console.log("🚀 STEP 3 : Sending image to AI");
+
   const detection = await detectIssueFromImage(req.file);
-  res.json({ success: true, detection });
+
+  console.log("✅ STEP 4 : AI Detection");
+  console.log(detection);
+
+  console.log("💾 STEP 5 : Uploading image to GridFS");
+
+  const upload = await uploadBufferToStorage(
+    req.file,
+    process.env.BACKEND_URL || `${req.protocol}://${req.get("host")}`
+  );
+
+  console.log("✅ STEP 6 : Upload complete");
+  console.log(upload.secure_url);
+
+  return res.json({
+    success: true,
+    detection,
+    imageUrl: upload.secure_url,
+  });
 });
 
 export const chat = asyncHandler(async (req, res) => {
