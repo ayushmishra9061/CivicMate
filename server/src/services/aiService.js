@@ -41,12 +41,17 @@ export const detectIssueFromImage = async (imageUrl) => {
   try {
     const { data } = await axios.post(`${env.aiServiceUrl}/detect`, { imageUrl }, { timeout: 15000 });
     return data;
-  } catch {
+  } catch (err) {
+    console.error("===== AI SERVICE ERROR =====");
+    console.error("Status:", err.response?.status);
+    console.error("Data:", err.response?.data);
+    console.error("Message:", err.message);
+  
     return {
-      issueType: 'Other',
+      issueType: "Other",
       confidence: 0,
-      priority: 'Medium',
-      note: 'AI service unavailable; manual verification required'
+      priority: "Medium",
+      note: "AI service unavailable",
     };
   }
 };

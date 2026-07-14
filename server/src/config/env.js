@@ -11,6 +11,6 @@ export const env = {
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET || 'dev-refresh-secret',
   jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || '15m',
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '7d',
-  aiServiceUrl: process.env.AI_SERVICE_URL || 'http://localhost:8000',
+  aiServiceUrl: process.env.AI_SERVICE_URL || 'https://civicmate-ai.onrender.com',
   overpassUrl: process.env.OVERPASS_URL || 'https://overpass-api.de/api/interpreter'
 };

@@ -20,9 +20,10 @@ export const uploadBufferToStorage = (file, baseUrl) =>
     uploadStream.on('error', reject);
     uploadStream.on('finish', () => {
       const url = `/api/uploads/${uploadStream.id.toString()}`;
+      console.log("Generated Image URL:", `${process.env.BACKEND_URL || baseUrl}${url}`);
       resolve({
         id: uploadStream.id.toString(),
-        secure_url: `${baseUrl}${url}`,
+        secure_url: `${process.env.BACKEND_URL || baseUrl}${url}`,
         url
       });
     });

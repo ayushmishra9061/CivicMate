@@ -10,6 +10,8 @@ export const detectIssue = asyncHandler(async (req, res) => {
       req.file,
       `${req.protocol}://${req.get("host")}`,
     );
+    console.log("Base URL:", `${req.protocol}://${req.get("host")}`);
+    console.log("Generated image URL:", upload.secure_url);
     imageUrl = upload.secure_url;
   }
   const detection = await detectIssueFromImage(imageUrl);
