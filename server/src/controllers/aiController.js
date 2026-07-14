@@ -4,17 +4,25 @@ import { askCivicMate, detectIssueFromImage } from "../services/aiService.js";
 import { uploadBufferToStorage } from "../services/storageService.js";
 
 export const detectIssue = asyncHandler(async (req, res) => {
-  let imageUrl = req.body.imageUrl;
-  if (req.file) {
-    const upload = await uploadBufferToStorage(
-      req.file,
-      `${req.protocol}://${req.get("host")}`,
-    );
-    console.log("Base URL:", `${req.protocol}://${req.get("host")}`);
-    console.log("Generated image URL:", upload.secure_url);
-    imageUrl = upload.secure_url;
+  // let imageUrl = req.body.imageUrl;
+  // if (req.file) {
+  //   const upload = await uploadBufferToStorage(
+  //     req.file,
+  //     `${req.protocol}://${req.get("host")}`,
+  //   );
+  //   console.log("Base URL:", `${req.protocol}://${req.get("host")}`);
+  //   console.log("Generated image URL:", upload.secure_url);
+  //   imageUrl = upload.secure_url;
+  // }
+  // const detection = await detectIssueFromImage(imageUrl);
+  if (!req.file) {
+    return res.status(400).json({
+      success: false,
+      message: "Image is required",
+    });
   }
-  const detection = await detectIssueFromImage(imageUrl);
+  
+  const detection = await detectIssueFromImage(req.file);
   res.json({ success: true, detection });
 });
 
