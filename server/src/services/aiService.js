@@ -58,9 +58,7 @@ export const detectIssueFromImage = async (file) => {
 
     return data;
   } catch (err) {
-    console.error("===== AI SERVICE ERROR =====");
-    console.error(err.response?.data || err.message);
-
+    console.error(err.message);
     return {
       issueType: "Other",
       confidence: 0,

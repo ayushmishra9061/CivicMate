@@ -36,8 +36,6 @@ export default function ReportComplaint() {
   
       const { data } = await api.post("/ai/detect", formData);
   
-      console.log(data);
-  
       if (data.success && data.detection) {
   
         const issueMap = {
