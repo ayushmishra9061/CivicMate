@@ -68,3 +68,21 @@ export const detectIssueFromImage = async (file) => {
     };
   }
 };
+
+export const inferPriority = (issueType) =>
+  priorityByIssue[issueType] || "Medium";
+
+export const askCivicMate = async ({ message, user }) => {
+  const normalized = message.toLowerCase();
+
+  const match = localAnswers.find((entry) =>
+    entry.keywords.some((keyword) => normalized.includes(keyword))
+  );
+
+  if (match) return match.answer;
+
+  return [
+    `I can help with CivicMate navigation and civic workflows for your ${user.role} account.`,
+    "Try asking about reporting a complaint, checking status, emergency services, service providers, or admin analytics.",
+  ].join(" ");
+};
