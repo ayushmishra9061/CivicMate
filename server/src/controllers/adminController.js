@@ -34,3 +34,54 @@ export const listUsers = asyncHandler(async (_req, res) => {
   const users = await User.find().select('-refreshTokenHash').sort({ createdAt: -1 });
   res.json({ success: true, users });
 });
+
+export const getAllComplaints = asyncHandler(async (_req, res) => {
+  const complaints = await Complaint.find()
+    .populate("userId", "name email")
+    .sort({ createdAt: -1 });
+
+  res.json({
+    success: true,
+    complaints,
+  });
+});
+
+export const updateComplaintStatus = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  const allowedStatuses = [
+    "Submitted",
+    "Verified",
+    "Assigned",
+    "In Progress",
+    "Resolved",
+    "Closed",
+  ];
+
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({
+      success: false,
+      message: "Invalid status.",
+    });
+  }
+
+  const complaint = await Complaint.findById(id);
+
+  if (!complaint) {
+    return res.status(404).json({
+      success: false,
+      message: "Complaint not found.",
+    });
+  }
+
+  complaint.status = status;
+
+  await complaint.save();
+
+  res.json({
+    success: true,
+    message: "Complaint status updated successfully.",
+    complaint,
+  });
+});

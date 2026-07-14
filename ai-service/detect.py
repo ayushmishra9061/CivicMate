@@ -20,7 +20,6 @@ ISSUE_MAP = {
     "garbage": ("Garbage accumulation", "Medium"),
     "streetlight": ("Broken streetlights", "High"),
     "water_leakage": ("Water leakage", "Critical"),
-    "road_damage": ("Road damage", "High"),
 }
 
 app = FastAPI(title="CivicMate YOLOv8 Detection Service", version="1.0.0")

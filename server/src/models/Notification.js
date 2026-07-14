@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const notificationSchema = new mongoose.Schema(
   {
@@ -23,25 +23,25 @@ const notificationSchema = new mongoose.Schema(
 
     actionUrl: {
       type: String,
-      default: ""
+      default: "",
     },
 
-    message: { 
-      type: String, 
-      required: true, 
-      trim: true 
+    message: {
+      type: String,
+      required: true,
+      trim: true,
     },
 
-    read: { 
-      type: Boolean, 
-      default: false 
+    read: {
+      type: Boolean,
+      default: false,
     },
 
-    meta: { 
-      type: mongoose.Schema.Types.Mixed 
+    meta: {
+      type: mongoose.Schema.Types.Mixed,
     },
   },
   { timestamps: true },
 );
 
-export const Notification = mongoose.model('Notification', notificationSchema);
+export const Notification = mongoose.model("Notification", notificationSchema);

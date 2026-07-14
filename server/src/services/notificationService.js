@@ -5,6 +5,14 @@ export const createNotification = async ({ userId, type, title, message, actionU
   const notification = await Notification.create({ userId, type, title, message, actionUrl, meta });
   emitToUser(userId.toString(), 'notification:new', notification);
   return notification;
+
+  console.log({
+    userId,
+    type,
+    actionUrl,
+    meta,
+  });
+
 };
 
 export const notifyAdmins = (event, payload) => {
